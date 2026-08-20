@@ -87,12 +87,14 @@ if (!remote) {
 }
 
 /* 2b. Discoverability: repos never appear under github.com/topics/dsh-plugin
- * automatically — the topic must be set on the repo (idempotent). */
+ * automatically — the topic must be set on the repo. Also set the About
+ * description (shown in search results / link cards). Idempotent. */
 run(["gh", "repo", "edit", repoName,
   "--add-topic", "dsh-plugin",
   "--add-topic", "deepseek-harness",
-  "--add-topic", "notification"]);
-console.log("· topics ensured: dsh-plugin, deepseek-harness, notification");
+  "--add-topic", "notification",
+  "--description", "DeepSeek Harness desktop notifications: turn done, approval and question pings"]);
+console.log("· topics + description ensured");
 
 /* 3. Tag + release with the packed tarball.
  * Overwrite semantics: the tag is force-moved and any existing release for it

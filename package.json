@@ -39,6 +39,7 @@
     "src/",
     "scripts/",
     "test/",
+    "assets/",
     "README.md",
     "LICENSE"
   ],

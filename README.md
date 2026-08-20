@@ -1,5 +1,12 @@
 # dsh-notify
 
+<p align="center">
+  <a href="https://github.com/lovesiss/dsh-notify/releases"><img alt="release" src="https://img.shields.io/github/v/release/lovesiss/dsh-notify"></a>
+  <a href="https://www.npmjs.com/package/@shermanono/dsh-notify"><img alt="npm" src="https://img.shields.io/npm/v/@shermanono/dsh-notify"></a>
+  <a href="https://github.com/lovesiss/dsh-notify/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/lovesiss/dsh-notify/actions/workflows/ci.yml/badge.svg"></a>
+  <a href="LICENSE"><img alt="MIT" src="https://img.shields.io/badge/license-MIT-blue"></a>
+</p>
+
 DeepSeek Harness 桌面提醒插件:AI 回合结束、需要你回答/批准时,右下角弹出系统通知。你切到别的页面、甚至切到**别的会话**工作时,都不会错过。
 
 > DeepSeek Harness desktop notifications: a system notification when the AI finishes a turn or waits for your input (questions / approvals) — so switching to another page or another session never costs you a missed turn.
@@ -19,6 +26,16 @@ DeepSeek Harness 桌面提醒插件:AI 回合结束、需要你回答/批准时,
 - 页面内右下角 toast 默认**关闭**,可在设置卡片开启;
 - 切走期间错过提示:最新 3 条会被暂存,回到页面 60 秒内自动补弹右下角 toast(仅当 toast 开启;同时覆盖系统"专注助手/勿扰"在全屏时吞掉系统弹窗的情况)。
 
+## 截图
+
+右下角系统通知(带回复摘要):
+
+![系统通知](assets/notification.png)
+
+设置页开关卡片(设置 → 插件 → 通知):
+
+![设置卡片](assets/settings.png)
+
 ## 特性
 
 - **零依赖**:纯 JavaScript,无运行时依赖、无构建依赖(打包脚本只用 Node 内置模块);
@@ -29,55 +46,33 @@ DeepSeek Harness 桌面提醒插件:AI 回合结束、需要你回答/批准时,
 
 ## 安装
 
-### 方式 A:一键安装(克隆本仓库的用户,推荐)
+### 方式 A:npm 一行安装(推荐,单 profile)
+
+```sh
+dsh plugin --profile web add @shermanono/dsh-notify
+```
+
+### 方式 B:全局安装(本机所有 profile 生效)
+
+```sh
+# 装进共享后备目录,插件行写进机器级补丁层
+npm install --prefix "$env:USERPROFILE\.dsh\profiles" @shermanono/dsh-notify
+```
+
+向 `$DSH_HOME/cordis.patch.yml`(Windows: `%USERPROFILE%\.dsh\cordis.patch.yml`)添加:
+
+```yaml
+- insert:
+    - id: notify
+      name: '@shermanono/dsh-notify'
+```
+
+### 方式 C:克隆源码自装(开发/尝鲜)
 
 ```sh
 git clone https://github.com/lovesiss/dsh-notify.git
 cd dsh-notify
-npm run install:global   # lib/ 已随仓库提交,无需构建
-```
-
-卸载:
-
-```sh
-npm run uninstall:global
-```
-
-### 方式 B:全局安装(手动,本机所有 profile 生效)
-
-```sh
-# 1. 把包链接进共享后备目录(Windows 用 junction;macOS/Linux 用 ln -s)
-New-Item -ItemType Directory -Force `
-  -Path "$env:USERPROFILE\.dsh\profiles\node_modules\@shermanono" | Out-Null
-New-Item -ItemType Junction `
-  -Path "$env:USERPROFILE\.dsh\profiles\node_modules\@shermanono\dsh-notify" `
-  -Target "D:\path\to\dsh-notify"
-
-# 2. 编辑 $DSH_HOME/cordis.patch.yml(Windows: %USERPROFILE%\.dsh\cordis.patch.yml)
-```
-
-```yaml
-- insert:
-    - id: notify
-      name: '@shermanono/dsh-notify'
-```
-
-### 方式 C:单 profile 安装(只影响一个 profile)
-
-```sh
-#  npm
-dsh plugin --profile web add @shermanono/dsh-notify
-
-#  GitHub 仓库
-dsh plugin --profile web add "github:lovesiss/dsh-notify"
-```
-
-编辑 `$DSH_HOME/profiles/web/cordis.patch.yml`:
-
-```yaml
-- insert:
-    - id: notify
-      name: '@shermanono/dsh-notify'
+npm run install:global   # 自动:链接 + 写补丁行(幂等);卸载用 npm run uninstall:global
 ```
 
 > 配置分层顺序:内置 bundle → 各 profile 的 `cordis.patch.yml` → **机器级 `$DSH_HOME/cordis.patch.yml`(应用到所有 profile)** → `--patch` 覆盖。不要编辑同目录的 `cordis.yml`。
