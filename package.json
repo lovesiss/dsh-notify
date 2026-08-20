@@ -1,0 +1,62 @@
+{
+  "name": "@shermanono/dsh-notify",
+  "version": "0.2.0",
+  "description": "DeepSeek Harness desktop notifications: system notification when the AI finishes a turn or waits for your input (questions / approvals).",
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "notification",
+    "toast",
+    "client-plugin"
+  ],
+  "type": "module",
+  "main": "./lib/index.js",
+  "license": "MIT",
+  "exports": {
+    ".": {
+      "default": "./lib/index.js"
+    },
+    "./client": {
+      "default": "./lib/client.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "client": {
+      "inject": [
+        "connection"
+      ],
+      "platform": "web"
+    }
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.0.1",
+    "@deepseek-ai/dsh-client-modules": "^0.1.0-rc.6",
+    "@deepseek-ai/dsh-client-connection": "^0.1.0-rc.6"
+  },
+  "files": [
+    "lib/",
+    "src/",
+    "scripts/",
+    "test/",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node --test",
+    "install:global": "node scripts/install.mjs",
+    "uninstall:global": "node scripts/uninstall.mjs",
+    "prepublishOnly": "npm run build && npm test"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lovesiss/dsh-notify.git"
+  }
+}

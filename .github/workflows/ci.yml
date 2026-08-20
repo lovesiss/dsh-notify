@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # zero runtime deps: no npm install step needed
+
+      - name: Build bundle
+        run: npm run build
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Bundle is committed and in sync
+        run: git diff --exit-code -- lib/client.js lib/index.js
